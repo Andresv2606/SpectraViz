@@ -69,86 +69,97 @@ const SpectrumGraph = ({ signals, noiseData }) => {
 
 
 
-  const renderSignals = () => {
-    return signals.map((signal, index) => {
-      const xPeak = freqToX(signal.fc);
-      const yPeak = dbmToY(signal.power);
-      const yFall = dbmToY(signal.power - 3);
-      const xStart = freqToX(signal.fc - signal.bw / 2);
-      const xEnd = freqToX(signal.fc + signal.bw / 2);
+const renderSignals = () => {
+  return signals.map((signal, index) => {
+    const xPeak = freqToX(signal.fc);
+    const yPeak = dbmToY(signal.power);
+    const yFall = dbmToY(signal.power - 3);
+    const xStart = freqToX(signal.fc - signal.bw / 2);
+    const xEnd = freqToX(signal.fc + signal.bw / 2);
 
-      return (
+    return (
+      <g key={`signal-${index}`} className="signal-group">
+        {/* Nombre de la señal arriba del pico */}
+        <text
+          x={xPeak}
+          y={yPeak - 15}
+          textAnchor="middle"
+          fill={`hsl(${index * 120}, 80%, 40%)`}
+          fontSize="11"
+          fontWeight="bold"
+        >
+          {signal.name}
+        </text>
 
-        <g key={`signal-${index}`} className="signal-group">
-          <polyline
-            points={calculateSignalPoints(signal)}
-            fill="none"
-            stroke={`hsl(${index * 120}, 80%, 50%)`}
-            strokeWidth="2"
-            strokeOpacity="0.8"
-          />
-          <text
-            x={0}
-            y={yPeak}
-            textAnchor="start"
-            fill={`hsl(${index * 120}, 80%, 50%)`}
-            fontWeight="bold"
-            fontSize={9}
-          >
-            {`${Math.abs(signal.power)} dBm`}
-          </text>
+        <polyline
+          points={calculateSignalPoints(signal)}
+          fill="none"
+          stroke={`hsl(${index * 120}, 80%, 50%)`}
+          strokeWidth="2"
+          strokeOpacity="0.8"
+        />
 
+        <text
+          x={0}
+          y={yPeak}
+          textAnchor="start"
+          fill={`hsl(${index * 120}, 80%, 50%)`}
+          fontWeight="bold"
+          fontSize={9}
+        >
+          {`${Math.abs(signal.power)} dBm`}
+        </text>
 
-          <line
-            x1={xStart}
-            y1={yFall}
-            x2={xEnd}
-            y2={yFall}
-            stroke="gray"
-            strokeDasharray="4,2"
-          />
-          <text
-            x={xPeak}
-            y={yFall - 5}
-            textAnchor="middle"
-            fill="gray"
-            fontSize="10"
-          >
-            {`${signal.power - 3} dBm caída`}
-          </text>
-          <text
-            x={xStart}
-            y={dimensions.height - 35}
-            textAnchor="middle"
-            fill="black"
-            fontSize="10"
-          >
-            {`${(signal.fc - signal.bw / 2).toFixed(2)} Hz`}
-          </text>
-          <text
-            x={xEnd}
-            y={dimensions.height - 35}
-            textAnchor="middle"
-            fill="black"
-            fontSize="10"
-          >
-            {`${(signal.fc + signal.bw / 2).toFixed(2)} Hz`}
-          </text>
-          <text
-            x={xPeak}
-            y={dimensions.height - 20}
-            textAnchor="middle"
-            fill="black"
-            fontSize="10"
-            fontWeight="bold"
-          >
-            {`${signal.fc.toFixed(2)} Hz`}
-          </text>
+        <line
+          x1={xStart}
+          y1={yFall}
+          x2={xEnd}
+          y2={yFall}
+          stroke="gray"
+          strokeDasharray="4,2"
+        />
+        <text
+          x={xPeak}
+          y={yFall - 5}
+          textAnchor="middle"
+          fill="gray"
+          fontSize="10"
+        >
+          {`${signal.power - 3} dBm caída`}
+        </text>
+        <text
+          x={xStart}
+          y={dimensions.height - 35}
+          textAnchor="middle"
+          fill="black"
+          fontSize="10"
+        >
+          {`${(signal.fc - signal.bw / 2).toFixed(2)} Hz`}
+        </text>
+        <text
+          x={xEnd}
+          y={dimensions.height - 35}
+          textAnchor="middle"
+          fill="black"
+          fontSize="10"
+        >
+          {`${(signal.fc + signal.bw / 2).toFixed(2)} Hz`}
+        </text>
+        <text
+          x={xPeak}
+          y={dimensions.height - 20}
+          textAnchor="middle"
+          fill="black"
+          fontSize="10"
+          fontWeight="bold"
+        >
+          {`${signal.fc.toFixed(2)} Hz`}
+        </text>
+      </g>
+    );
+  });
+};
 
-        </g>
-      );
-    });
-  };
 
   const renderNoiseFloor = () => {
     if (!noiseData) return null;
