@@ -163,7 +163,7 @@ const renderSignals = () => {
 
   const renderNoiseFloor = () => {
     if (!noiseData) return null;
-    const baseY = dbmToY(-Math.abs(noiseData.totalNoise));
+    const baseY = dbmToY(noiseData.totalNoise);
     const points = [];
 
     for (let i = 0; i <= 100; i++) {
